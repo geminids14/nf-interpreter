@@ -39,7 +39,7 @@ endif()
 # nF feature: networking
 if(USE_NETWORKING_OPTION)
     find_package(CHIBIOS_LWIP REQUIRED)
-    find_package(NF_NETWORKING REQUIRED)
+	find_package(NF_NETWORKING REQUIRED)
 endif()
 
 # nF feature: filesystem
@@ -94,9 +94,6 @@ add_executable(
 
     "${CMAKE_CURRENT_SOURCE_DIR}/target_common.c"
 
-    # the next one is required is the target implements and it's using external memory
-    "${CMAKE_CURRENT_SOURCE_DIR}/target_external_memory.c"
-
     ${COMMON_PROJECT_SOURCES}
     ${NANOCLR_PROJECT_SOURCES}
 
@@ -118,7 +115,7 @@ add_executable(
 
     # sources for ChibiOS FatFS
     "${CHIBIOS_FATFS_SOURCES}"
-    
+	
     # sources for nanoFramework Network LWIP, Sockets and TLS
     "${CHIBIOS_LWIP_SOURCES}"
     "${NF_Networking_SOURCES}"
@@ -193,7 +190,7 @@ target_include_directories(${NANOCLR_PROJECT_NAME}.elf PUBLIC
     "${NF_CoreCLR_INCLUDE_DIRS}"
     "${NF_Debugger_INCLUDE_DIRS}"
     "${NF_Diagnostics_INCLUDE_DIRS}"
-    
+
     # includes for nanoFramework APIs
     "${TARGET_NANO_APIS_INCLUDES}"
 
@@ -203,7 +200,7 @@ target_include_directories(${NANOCLR_PROJECT_NAME}.elf PUBLIC
     # includes for ChibiOS LwIP
     "${CHIBIOS_LWIP_INCLUDE_DIRS}"
 
-    # incudes for Networking and TLS
+	# incudes for Networking and TLS
     "${NF_Networking_INCLUDE_DIRS}"
     "${mbedTLS_INCLUDE_DIRS}"
 )
@@ -224,11 +221,11 @@ nf_set_compiler_definitions(${NANOCLR_PROJECT_NAME}.elf)
 
 # set linker files
 if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
-    nf_set_linker_file(${NANOBOOTER_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoBooter/STM32F76xx_booter-DEBUG.ld)
-    nf_set_linker_file(${NANOCLR_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoCLR/STM32F76xx_CLR-DEBUG.ld)
+    nf_set_linker_file(${NANOBOOTER_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoBooter/STM32F746xG_booter-DEBUG.ld)
+    nf_set_linker_file(${NANOCLR_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoCLR/STM32F746xG_CLR-DEBUG.ld)
 else()
-    nf_set_linker_file(${NANOBOOTER_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoBooter/STM32F76xx_booter.ld)
-    nf_set_linker_file(${NANOCLR_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoCLR/STM32F76xx_CLR.ld)
+    nf_set_linker_file(${NANOBOOTER_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoBooter/STM32F746xG_booter.ld)
+    nf_set_linker_file(${NANOCLR_PROJECT_NAME}.elf ${CMAKE_CURRENT_SOURCE_DIR}/nanoCLR/STM32F746xG_CLR.ld)
 endif()
 
 # set linker options
@@ -238,8 +235,8 @@ nf_set_linker_options(${NANOCLR_PROJECT_NAME}.elf)
 # add other linker flags
 ###########################################################
 # the sizes of CRT heap and ChibiOS stacks are defined here
-set_property(TARGET ${NANOBOOTER_PROJECT_NAME}.elf APPEND_STRING PROPERTY LINK_FLAGS ",--defsym=__main_stack_size__=0x400,--defsym=__process_stack_size__=0x800,--defsym=__crt_heap_size__=0x2000")
-set_property(TARGET ${NANOCLR_PROJECT_NAME}.elf APPEND_STRING PROPERTY LINK_FLAGS ",--defsym=__main_stack_size__=0x400,--defsym=__process_stack_size__=0x800,--defsym=__crt_heap_size__=0x3B000")
+set_property(TARGET ${NANOBOOTER_PROJECT_NAME}.elf APPEND_STRING PROPERTY LINK_FLAGS ",--defsym=__main_stack_size__=0x400,--defsym=__process_stack_size__=0x400,--defsym=__crt_heap_size__=0x1000")
+set_property(TARGET ${NANOCLR_PROJECT_NAME}.elf APPEND_STRING PROPERTY LINK_FLAGS ",--defsym=__main_stack_size__=0x400,--defsym=__process_stack_size__=0x800,--defsym=__crt_heap_size__=0x2800")
 
 # generate output files
 nf_generate_build_output_files(${NANOBOOTER_PROJECT_NAME}.elf)
